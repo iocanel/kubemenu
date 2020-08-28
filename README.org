@@ -1,0 +1,38 @@
+* Kubemenu
+
+Kubemenu is a selection of bash scripts, that use [[https://tools.suckless.org/dmenu/][dmenu]] in order to make it easy to perform simple kubernetes tasks:
+
+- Select namespace
+- Show container logs
+- Exec into a container
+
+** Why ?
+- I have been using kubernetes since 2014, yet I still haven't been able to memorize the command to switch to an other namespace.
+- Container related commands are so painful to write that I'll do anything to avoid them.
+- Cool tooling like [[https://github.com/abrochard/kubel][kubel]], [[https://github.com/derailed/k9s][k9s]], etc are awesome, but they have limited context (e.g. `shell`, `editor` etc). I'd like to perform these tasks from anywhere, anytime!
+- It`s the unix thing to do.
+  
+
+** Installation
+   
+*** Requirements
+    - [[https://tools.suckless.org/dmenu][dmenu]] (or even better [[https://github.com/davatorium/rofi][rofi]] linked to dmenu [[https://tools.suckless.org/dmenu/][dmenu]] )
+    - notify-send
+
+  To install kubemenu:
+  #+begin_src sh
+  ./install.sh
+  #+end_src
+  
+** Usage
+   Just use the [[https://tools.suckless.org/dmenu/][dmenu]] shortcut!
+   
+    [[file:img/select-namespace.png][Select namespace]]
+
+    [[file:img/pod-logs.png][Pod logs]]
+
+    [[file:img/pod-exec.png][Pod exec]]
+
+
+
+  

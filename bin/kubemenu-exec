@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Detect terminal
+MY_TERMINAL=""
+if [ ! -z "$TERMINAL" ]; then
+    MY_TERMINAL=$TERMINAL;
+elif command -v urxvt > /dev/null; then
+    MY_TERMINAL="urxvt";
+elif command -v alacritty > /dev/null; then
+    MY_TERMINAL="alacritty";
+elif command -v xterm > /dev/null; then
+    MY_TERMINAL="xterm";
+fi
+
+# Verify terminal exists
+if [ -z "$MY_TERMINAL" ]; then
+    exit 1
+fi
+
+# Get pods
+SELECTED_POD=`kubectl get pods | grep -v NAME | cut -d " " -f1 | dmenu -p "Select pod"`
+RESULT=$?
+if [ $RESULT -ne 0 ]; then
+    notify-send -u critical -i ~/.config/kmenu/kubernetes.png kubernetes -a "Kubernetes" "Failed to get pods!"
+    exit 1
+fi
+
+# Get containers
+POD_CONTAINERS=`kubectl get pods $SELECTED_POD -o jsonpath="{.spec.containers[*].name}"`
+RESULT=$?
+if [ $RESULT -ne 0 ]; then
+    notify-send -u critical -i ~/.config/kmenu/kubernetes.png kubernetes -a "Kubernetes" "Failed to get containers of: $SELECTED_POD!"
+    exit 1
+fi
+CONTAINER_COUNT=`echo $POD_CONTAINERS | wc -w`
+if [[ $CONTAINER_COUNT -eq 1 ]]; then
+    SELECTED_CONTAINER=$POD_CONTAINERS
+else
+    SELECTED_POD=`echo $SELECTED_CONTAINER | tr ' ' '\n'  | dmenu -p "Select container"`
+fi
+TMP_FILE=$(mktemp /tmp/kubemenu.XXXXXX)
+
+#
+# Generate scripts
+#
+echo "#!/bin/bash" > $TMP_FILE
+echo "kubectl exec $SELECTED_POD -c $SELECTED_CONTAINER -i -t -- /bin/bash" >> $TMP_FILE
+echo "read -p \"Press enter to continue\"" >> $TMP_FILE
+
+chmod +x $TMP_FILE
+CMD="$MY_TERMINAL -e $TMP_FILE"
+eval $CMD

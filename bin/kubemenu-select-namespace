@@ -1,0 +1,10 @@
+#!/bin/bash
+
+SELECTED_NAMESPACE=`kubectl get namespaces | grep -v NAME | awk  '{print $1}' | dmenu -p "Choose namespace"`
+KUBE_OUT=`kubectl config set-context --current --namespace=$SELECTED_NAMESPACE`
+RESULT=$?
+if [ $RESULT -eq 0 ]; then
+    notify-send -u normal -i ~/.config/kmenu/kubernetes.png kubernetes -a "Kubernetes" "Selected namespace: $SELECTED_NAMESPACE"
+else
+    notify-send -u critical -i ~/.config/kmenu/kubernetes.png kubernetes -a "Kubernetes" "Failed to set namespace: $SELECTED_NAMESPACE"
+fi

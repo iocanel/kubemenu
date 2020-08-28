@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Exec into pod
+GenericName=kubemenu
+Comment=Kubemenu
+Exec=kubemenu-exec
+Icon=kubernetes
+Type=Application
+Terminal=false
+Categories=Devops
+Keywords=Keywords;Menu;

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Pod logs
+GenericName=kubemenu
+Comment=Kubemenu
+Exec=kubemenu-logs
+Icon=kubernetes
+Type=Application
+Terminal=false
+Categories=Devops
+Keywords=Keywords;Menu;
