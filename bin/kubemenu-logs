@@ -18,7 +18,7 @@ if [ -z "$MY_TERMINAL" ]; then
 fi
 
 # Get pods
-SELECTED_POD=`kubectl get pods | grep -v NAME | cut -d " " -f1 | dmenu -p "Select pod"`
+SELECTED_POD=`kubectl get pods | grep -v NAME | grep -v Completed | cut -d " " -f1 | dmenu -p "Select pod"`
 RESULT=$?
 if [ $RESULT -ne 0 ]; then
     notify-send -u critical -i ~/.config/kmenu/kubernetes.png kubernetes -a "Kubernetes" "Failed to get pods!"
@@ -26,7 +26,7 @@ if [ $RESULT -ne 0 ]; then
 fi
 
 # Get containers
-POD_CONTAINERS=`kubectl get pods $SELECTED_POD -o jsonpath="{.spec.containers[*].name}"`
+POD_CONTAINERS=`kubectl get pods $SELECTED_POD -o jsonpath="{.spec.containers[*].name}" | sed 's/ /\n/g' | dmenu -p "Select container"`
 RESULT=$?
 if [ $RESULT -ne 0 ]; then
     notify-send -u critical -i ~/.config/kmenu/kubernetes.png kubernetes -a "Kubernetes" "Failed to get containers of: $SELECTED_POD!"

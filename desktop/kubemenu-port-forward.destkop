@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Port forward
+GenericName=kubemenu
+Comment=Kubemenu
+Exec=kubemenu-port-forward
+Icon=kubernetes
+Type=Application
+Terminal=false
+Categories=Devops
+Keywords=Keywords;Menu;

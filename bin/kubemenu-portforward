@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Detect terminal
+MY_TERMINAL=""
+if [ ! -z "$TERMINAL" ]; then
+    MY_TERMINAL=$TERMINAL;
+elif command -v urxvt > /dev/null; then
+    MY_TERMINAL="urxvt";
+elif command -v alacritty > /dev/null; then
+    MY_TERMINAL="alacritty";
+elif command -v xterm > /dev/null; then
+    MY_TERMINAL="xterm";
+fi
+
+# Verify terminal exists
+if [ -z "$MY_TERMINAL" ]; then
+    exit 1
+fi
+
+# Get pods
+SELECTED_SERVICE=`kubectl get services | grep -v NAME | grep "\TCP" | cut -d " " -f1 | dmenu -p "Select service"`
+RESULT=$?
+if [ $RESULT -ne 0 ]; then
+    notify-send -u critical -i ~/.config/kmenu/kubernetes.png kubernetes -a "Kubernetes" "Failed to get services!"
+    exit 1
+fi
+
+# Get ports
+SERVICE_PORT=`kubectl get services $SELECTED_SERVICE -o jsonpath="{.spec.ports[*].port}" | sed 's/ /\n/g' | dmenu -p "Select port"`
+RESULT=$?
+if [ $RESULT -ne 0 ]; then
+    notify-send -u critical -i ~/.config/kmenu/kubernetes.png kubernetes -a "Kubernetes" "Failed to get ports of: $SELECTED_SERVICE!"
+    exit 1
+fi
+
+TARGET_PORT=`kubectl get services $SELECTED_SERVICE -o jsonpath="{.spec.ports[*].targetPort}" | sed 's/ /\n/g' | dmenu -p "Select target port"`
+RESULT=$?
+if [ $RESULT -ne 0 ]; then
+    notify-send -u critical -i ~/.config/kmenu/kubernetes.png kubernetes -a "Kubernetes" "Failed to get ports of: $SELECTED_SERVICE!"
+    exit 1
+fi
+
+TMP_FILE=$(mktemp /tmp/kubemenu.XXXXXX)
+#
+# Generate scripts
+#
+echo "#!/bin/bash" > $TMP_FILE
+echo "kubectl port-forward service/$SELECTED_SERVICE $TARGET_PORT:$SERVICE_PORT" >> $TMP_FILE
+echo "read -p \"Press enter to continue\"" >> $TMP_FILE
+
+chmod +x $TMP_FILE
+CMD="$MY_TERMINAL -e $TMP_FILE"
+eval $CMD

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+SELECTED_CONTEXT=`kubectl config get-contexts | grep -v NAME | awk  '{print $1}' | dmenu -p "Choose context"`
+SELECTED_NAMESPACE=`kubectl config get-contexts | grep $SELECTED_CONTEXT | awk '{print $4}'`
+echo "selected namespace: $SELECTED_NAMESPACE"
+KUBE_OUT=`kubectl config use-context $SELECTED_CONTEXT --namespace=$SELECTED_NAMESPACE`
+RESULT=$?
+if [ $RESULT -eq 0 ]; then
+    notify-send -u normal -i ~/.config/kmenu/kubernetes.png kubernetes -a "Kubernetes" "Selected context: $SELECTED_CONTEXT"
+else
+    notify-send -u critical -i ~/.config/kmenu/kubernetes.png kubernetes -a "Kubernetes" "Failed to set context: $SELECTED_CONTEXT"
+fi

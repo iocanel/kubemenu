@@ -27,9 +27,9 @@ Kubemenu is a selection of bash scripts, that use [[https://tools.suckless.org/d
 ** Usage
    Just use the [[https://tools.suckless.org/dmenu/][dmenu]] shortcut!
    
-    [[file:img/select-namespace.png][Select namespace]]
+    [[img/select-namespace.png][Select namespace]]
 
-    [[file:img/pod-logs.png][Pod logs]]
+    [[file:img/pod-logs.png][]]
 
     [[file:img/pod-exec.png][Pod exec]]
 

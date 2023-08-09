@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Select context
+GenericName=kubemenu
+Comment=Kubemenu
+Exec=kubemenu-select-context
+Icon=kubernetes
+Type=Application
+Terminal=false
+Categories=Devops
+Keywords=Keywords;Menu;
